@@ -1,6 +1,6 @@
 # Forslag til prosjektplan
 
-Dato: 21. oktober 2026. Status: Planlegging – implementering starter etter at planen er avklart.
+Dato: 21. oktober 2026. Status: Oppstart av miljø og struktur er godkjent. Modellarbeid skjer stegvis. Se OPPSTART.md for gjeldende oppstart og avgrensning.
 
 ## Kort oppsummering
 
@@ -127,3 +127,4 @@ Neste steg i planleggingen er å avklare disse punktene og oppdatere planen. Det
 - [PyTorch: installasjonsvalg](https://pytorch.org/get-started/locally/)
 
 Kildene for HRSID og modellvalget ble kontrollert 21. oktober 2026. Lisensvilkår for datasett, programvare og vekter kontrolleres før eventuell deling eller publisering av disse.
+

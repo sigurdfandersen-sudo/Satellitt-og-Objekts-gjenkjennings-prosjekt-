@@ -1,0 +1,22 @@
+# Lokalt Python-miljø og mellomlagring
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+
+# Store data, modellvekter og genererte resultater
+/data/raw/*
+!/data/raw/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+/models/*
+!/models/.gitkeep
+/runs/*
+!/runs/.gitkeep
+*.pt
+*.pth
+*.onnx
+*.zip
