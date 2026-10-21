@@ -1,5 +1,7 @@
 # Forslag til prosjektplan
 
+> Gjeldende arbeidsmåte: Sigurd skriver all prosjektkode selv og velger egen struktur. Vi forklarer og arbeider ett lite steg om gangen. Se [AGENTS.md](AGENTS.md); disse reglene gjelder foran eldre forslag om automatisk implementering.
+
 Dato: 21. oktober 2026. Status: Oppstart av miljø og struktur er godkjent. Modellarbeid skjer stegvis. Se OPPSTART.md for gjeldende oppstart og avgrensning.
 
 ## Kort oppsummering
@@ -127,4 +129,5 @@ Neste steg i planleggingen er å avklare disse punktene og oppdatere planen. Det
 - [PyTorch: installasjonsvalg](https://pytorch.org/get-started/locally/)
 
 Kildene for HRSID og modellvalget ble kontrollert 21. oktober 2026. Lisensvilkår for datasett, programvare og vekter kontrolleres før eventuell deling eller publisering av disse.
+
 

@@ -1,0 +1,10 @@
+# Installer CUDA-utgaven av torch/torchvision først; se OPPSTART.md.
+# Direkte biblioteker. requirements-lock.txt inneholder hele miljøet.
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+ultralytics==8.4.183
+numpy==2.5.2
+pillow==12.3.0
+matplotlib==3.11.2
+opencv-python==5.0.0.93
+pyyaml==6.0.3

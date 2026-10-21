@@ -1,5 +1,7 @@
 # Oppsummering og oppstart
 
+> Gjeldende arbeidsmåte: Sigurd skriver all prosjektkode selv og velger egen struktur. Vi forklarer og arbeider ett lite steg om gangen. Se [AGENTS.md](AGENTS.md); disse reglene gjelder foran eldre forslag om automatisk implementering.
+
 Oppdatert 21. oktober 2026.
 
 ## Hva vi skal gjøre
@@ -25,7 +27,7 @@ COCO lagrer vanlige bokser som [x, y, bredde, høyde], der x og y er øvre venst
 
 ## Python-miljø
 
-Et eget miljø er opprettet i .venv med eksisterende Python 3.13.13. Det isolerer prosjektets installerte pakker fra andre prosjekter. Det inneholder foreløpig Python og pip; PyTorch og Ultralytics er ikke installert i dette steget.
+Et eget miljø er opprettet i .venv med eksisterende Python 3.13.13. Det isolerer prosjektets installerte pakker fra andre prosjekter. Miljøet inneholder nå PyTorch med CUDA 12.8, torchvision, Ultralytics og bildebibliotekene. Se den kontrollerte installasjonsstatusen nedenfor.
 
 Fra prosjektmappen i PowerShell kan miljøet aktiveres med:
 
@@ -42,7 +44,7 @@ Man kan også bruke Python direkte uten aktivering:
 
 I VS Code velges .venv\Scripts\python.exe som Python-tolk. En tolk er programmet som kjører Python-koden.
 
-Neste installasjonssteg er å velge en stabil PyTorch/torchvision-kombinasjon med GPU-støtte, og deretter Ultralytics. Pillow, NumPy og Matplotlib trengs til bilder og visning. Nøyaktige versjoner registreres etter vellykket installasjon i en requirements-fil. Vi lager ikke en fiktiv liste over installerte versjoner nå. Ingen modeller eller datasett er lastet ned av oppstarten.
+Bibliotekene er installert. requirements.txt viser direkte biblioteker; requirements-lock.txt er et øyeblikksbilde av alle installerte pakker i dette Windows/Python 3.13-miljøet. Ingen ferdigtrente modellvekter eller datasett er lastet ned av oppstarten.
 
 ## Hvordan filene håndteres
 
@@ -80,7 +82,7 @@ Dette er praktisk lisensinformasjon for planlegging, ikke en vurdering av et fra
 ## Neste små steg
 
 1. Avklare lisensforslaget og åpne prosjektmappen i VS Code.
-2. Installere PyTorch med riktig GPU-støtte og deretter Ultralytics i .venv.
+2. Biblioteker og GPU-støtte er installert og kontrollert. Velg .venv i VS Code.
 3. Legge HRSID i data/raw og se på noen bilder og fasitbokser.
 4. Dokumentere datadelingen og lage YOLO-konvertering.
 5. Starte liten CNN-øvelse og et kort YOLO-forsøk. Ingen lang trening før dataene er kontrollert.
@@ -93,3 +95,45 @@ Dette er praktisk lisensinformasjon for planlegging, ikke en vurdering av et fra
 - [AGPL-3.0: lisensvilkår](https://www.gnu.org/licenses/agpl-3.0.html)
 - [HRSID: prosjekt, sitering og nedlastinger](https://github.com/chaozhong2010/HRSID)
 - [HRSID: repoets LICENSE](https://github.com/chaozhong2010/HRSID/blob/master/LICENSE)
+
+## Installert og kontrollert miljø
+
+Dato: 21. oktober 2026. Python 3.13.13, torch 2.11.0+cu128, torchvision 0.26.0+cu128 og ultralytics 8.4.183. Øvrige direkte pakker står i requirements.txt. Modellfamilien YOLO26 og versjonsnummeret på Python-pakken Ultralytics er forskjellige navn/numre.
+
+Kontroller som er gjennomført:
+
+- Import av torch, torchvision, ultralytics, NumPy, Pillow, Matplotlib og OpenCV.
+- CUDA tilgjengelig og GPU identifisert som Quadro RTX 4000 Max-Q, 8 GB.
+- Liten matriseberegning på GPU med riktig resultat.
+- YOLO26n bygget fra inkludert YAML og kjørt med et syntetisk bilde på GPU. Den brukte tilfeldige vekter; kontrollen er ikke et resultat for skipsdeteksjon.
+- pip check fant ingen ødelagte avhengigheter.
+
+Kontrollen sier at miljøet kjører. HRSID-trening og praktisk treningshastighet er ikke prøvd.
+
+### Gjenskape miljøet på en tilsvarende Windows-PC
+
+Etter å ha opprettet og valgt .venv installeres GPU-utgaven først:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+```
+
+Dette oppsettet er kontrollert med NVIDIA-driver 573.91 og CUDA 12.8-støtte. Andre operativsystemer, GPU-er eller Python-versjoner kan kreve andre installasjonsvalg. CUDA-runtime følger PyTorch-pakken; denne installasjonen krevde ikke separat CUDA Toolkit.
+
+### YOLO26n og TorchScript
+
+Vi skal bruke yolo26n.pt som ferdigtrent startmodell. Det er en PyTorch-modellfil som støtter videre trening gjennom Ultralytics. Den skal senere lagres under models/.
+
+TorchScript er et eksportformat, ikke en egen detektor eller et nødvendig treningsbibliotek. Ultralytics dokumenterer at PyTorch har avviklet videre satsing på TorchScript (deprecated), og beholder eksport for eldre integrasjoner. Vi trenger ikke TorchScript-eksport for å trene eller bruke modellen fra Python. Eventuell eksport velges etter at vi har en modell og vet hvor den skal kjøres.
+
+At modellen brukes til bilder tatt ovenfra endrer datasett og treningsbehov, men krever ikke et eget bibliotek kalt «aerial imagery».
+
+Ultralytics-innstillingene fra miljøkontrollen ligger under runs/ultralytics-settings, med sync slått av. Dette ble satt for kontrollprosessen. Framtidige programmer skal bruke en uttrykkelig prosjektkonfigurasjon for modell-, data- og resultatmapper.
+
+Kilder:
+
+- [YOLO26 og yolo26n.pt](https://docs.ultralytics.com/models/yolo26/)
+- [TorchScript-eksport og status](https://docs.ultralytics.com/integrations/torchscript/)
+- [PyTorch lokalt](https://pytorch.org/get-started/locally/)
+
