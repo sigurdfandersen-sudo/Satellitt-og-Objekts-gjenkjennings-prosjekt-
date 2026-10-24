@@ -1,0 +1,93 @@
+DATAFORDELING FOR HRSID
+Oppdatert: 2026-10-24
+Status: Egen tredeling er valgt. Ingen konkrete kilde-ID-er er fordelt ennå.
+
+HENSIKT MED TRE GRUPPER
+Trening: Bildene brukes til å justere modellens vekter.
+Validering: Bildene brukes underveis til å følge utviklingen, velge
+treningsrunde og sammenligne modeller og innstillinger.
+Test: Bildene brukes til avsluttende evaluering etter at valgene er tatt.
+Gjentatt bruk av testresultater til modellvalg gjør at testen i praksis
+fungerer som validering.
+
+VALGT DATAGRUNNLAG
+Bruk train_test2017.json som én samlet oversikt over hele datasettet:
+5604 utsnitt, 16951 båtbokser og 137 kilde-ID-er.
+Vi bruker ikke original train2017.json/test2017.json til å bestemme
+hvilke bilder som skal høre til de nye gruppene.
+Originaldata og JSON-filer bevares.
+
+HVORFOR VI LAGER EN NY FORDELING
+Original treningsdel har 3642 utsnitt og 137 kilde-ID-er.
+Original testdel har 1962 utsnitt og 136 kilde-ID-er.
+136 kilde-ID-er finnes i begge originalgruppene. Dette påviser felles
+kilde-ID-er, ikke identiske eller faktisk overlappende utsnitt.
+Derfor velger vi å fordele hele datasettet selv etter kilde-ID.
+Resultatene våre kan ikke sammenlignes direkte med målinger gjort på
+HRSID sin opprinnelige testfordeling. Oppgaven må beskrive egen fordeling.
+
+HVA EN KILDE-ID BETYR
+Et stort radarbilde er delt opp i mindre utsnitt.
+Vi grupperer etter delen før første understrek i bildefilnavnet.
+Eksempel: P0001_3600_4400_4200_5000.jpg tilhører gruppen P0001.
+Alle utsnitt med samme kilde-ID skal tilhøre samme datasettgruppe.
+En kildegruppe er ikke en treningsbatch. Batcher settes sammen av
+treningsutsnitt under treningen og kan inneholde flere kilde-ID-er.
+Ulike kilde-ID-er garanterer ikke forskjellige geografiske områder;
+slik geografisk uavhengighet krever mer metadata og er ikke kontrollert.
+
+FORESLÅTT STØRRELSE PÅ GRUPPENE
+Trening: omtrent 70 prosent, tilsvarende rundt 3922 utsnitt.
+Validering: omtrent 15 prosent, tilsvarende rundt 841 utsnitt.
+Test: omtrent 15 prosent, tilsvarende rundt 841 utsnitt.
+Dette er veiledende måltall, ikke en ferdig fordeling eller en fasit.
+Vi har foreslått 96 kilde-ID-er til trening, 20 til validering og 21 til test.
+Kildegruppene har ulik størrelse. Prosent av kilde-ID-er er derfor ikke
+nødvendigvis samme prosent av bilder eller båtbokser.
+Etter trekningen teller vi faktiske bilder og bokser i hver gruppe.
+
+HVORDAN FORDELINGEN SKAL LAGES
+1. Hent alle kilde-ID-er fra images i train_test2017.json.
+2. Fjern duplikater slik at hver kilde-ID bare forekommer én gang.
+3. Sorter ID-ene før tilfeldig blanding, slik at utgangspunktet er fast.
+4. Bland ID-ene tilfeldig én gang med fast seed, foreslått 42.
+   Seed er et starttall som gjør samme metode og utgangspunkt gjentakbart.
+5. Fordel ID-ene mellom trening, validering og test.
+6. La alle utsnitt og tilhørende etiketter følge sin kilde-ID.
+7. Tell bilder og bokser, og se etter en rimelig variasjon av situasjoner
+   i gruppene. Bestem og lås fordelingen før modellresultatene undersøkes.
+8. Lagre kilde-ID-er og alle bildefilnavn for hver gruppe. Disse konkrete
+   listene er oversikten vi senere bruker til å gjenta og beskrive forsøket.
+
+HVOR DETTE SKJER
+Fordelingen klargjøres i dataformatering.py før trening.
+YOLO_test1.py bruker deretter den ferdige fordelingen.
+Bilder flyttes ikke mellom gruppene for hver epoke eller batch.
+Alle modellforsøk bruker samme fordeling for en rettferdig sammenligning.
+
+BILDER OG ETIKETTER
+Bilde og etikett skal følge samme gruppe og ha samme grunnnavn.
+YOLO-etikettlinjen er fortsatt: klasse sentrum_x sentrum_y bredde høyde.
+Klasse 0 er ship. Kilde-ID og gruppenavn skal ikke skrives inn i linjen.
+Tidligere labels_train/labels_test er laget fra originalfordelingen og er
+ikke automatisk de endelige nye gruppene. Før trening må nye målmapper
+kontrolleres for feilplasserte filer eller rester fra tidligere kjøringer.
+
+KONTROLLER FØR TRENING
+Alle 5604 bildefilnavn skal være med nøyaktig én gang i fordelingen.
+Ingen kilde-ID eller bildefilnavn skal finnes i mer enn én gruppe.
+Hvert bilde skal ha sin tilhørende etikettfil i samme gruppe.
+Kontroller noen bokser visuelt på bildene før trening.
+
+FYLL INN NÅR FORDELINGEN ER LAGET
+Valgt seed:
+Trenings-ID-er / sti til oversikt:
+Validerings-ID-er / sti til oversikt:
+Test-ID-er / sti til oversikt:
+Antall kilde-ID-er, bilder og bokser i trening:
+Antall kilde-ID-er, bilder og bokser i validering:
+Antall kilde-ID-er, bilder og bokser i test:
+Stier til fullstendige bildefilnavnlister:
+Bekreftet ingen felles kilde-ID-er mellom noen av gruppene:
+Bekreftet ingen felles bildefilnavn mellom noen av gruppene:
+Egen fordeling og begrensningene er beskrevet i rapporten:

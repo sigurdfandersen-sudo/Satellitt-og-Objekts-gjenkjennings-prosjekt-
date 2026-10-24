@@ -4,6 +4,7 @@ from PIL import Image
 import json #tekstformat for å lagre strukturerte data, HRSID bruker det for å beskrive bilder og båter
 from PIL import Image, ImageDraw
 from pathlib import Path
+import random
 
 
 with open("data/raw/HRSID_JPG/annotations/train_test2017.json", encoding = "utf-8") as fil:
@@ -96,4 +97,38 @@ for bilde in fasit_test["images"]:
     info = konverter_bilde(filnavn, fasit_test)
     lagre_etiketter_test(filnavn, info)
 
-print("antall bilder er ", len(fasit["images"]))
+kilde_ider = set()
+kilde_liste = []
+treningbilder_liste = []
+valideringsbilder_liste = []
+testbilder_liste = []
+
+for bilde in fasit_trening["images"]:
+    kilde_id = bilde["file_name"].split("_")[0]
+    kilde_ider.add(kilde_id)
+    kilde_liste = sorted(kilde_ider)
+    trekning = random.Random(42)
+    trekning.shuffle(kilde_liste)
+
+    trening_ider = kilde_liste[:96]
+    validering_ider = kilde_liste[96:116]
+    test_ider = kilde_liste[116:]
+
+    if kilde_id in trening_ider:
+        treningbilder_liste.append(bilde)
+    elif kilde_id in validering_ider:
+        valideringsbilder_liste.append(bilde)
+    else:
+        testbilder_liste.append(bilde)
+
+
+        
+print("antall kilde_ider er ", len(kilde_ider))
+print("antall trenings ider", len(trening_ider))
+print("antall validerings ider", len(validering_ider))
+print("antall test ider", len(test_ider))
+print("antall bilder av test_trainer ", len(fasit["images"]))
+print("antall bilder av test sett er", len(fasit_test["images"]))
+print("antall bilder av trening sett er", len(fasit_trening["images"]))
+print("de 5 første elementene i id er ", kilde_liste[:5])
+print("de 5 siste elemente i id er ", kilde_liste[-5:])
