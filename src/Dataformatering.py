@@ -103,16 +103,22 @@ treningbilder_liste = []
 valideringsbilder_liste = []
 testbilder_liste = []
 
-for bilde in fasit_trening["images"]:
+for bilde in fasit["images"]:
     kilde_id = bilde["file_name"].split("_")[0]
     kilde_ider.add(kilde_id)
-    kilde_liste = sorted(kilde_ider)
-    trekning = random.Random(42)
-    trekning.shuffle(kilde_liste)
 
-    trening_ider = kilde_liste[:96]
-    validering_ider = kilde_liste[96:116]
-    test_ider = kilde_liste[116:]
+
+kilde_liste = sorted(kilde_ider)
+trekning = random.Random(42)
+trekning.shuffle(kilde_liste)
+
+trening_ider = kilde_liste[:96]
+validering_ider = kilde_liste[96:116]
+test_ider = kilde_liste[116:]
+
+for bilde in fasit["images"]:
+    kilde_id = bilde["file_name"].split("_")[0]
+    kilde_ider.add(kilde_id)
 
     if kilde_id in trening_ider:
         treningbilder_liste.append(bilde)
@@ -121,8 +127,26 @@ for bilde in fasit_trening["images"]:
     else:
         testbilder_liste.append(bilde)
 
+with open("data/raw/bildelister/treningsbilderliste.txt", "w", encoding= "utf-8") as fil:
+    for treningsbilde in treningbilder_liste:
+        navn = treningsbilde["file_name"]
+        fil.write(navn + "\n") 
 
-        
+with open("data/raw/bildelister/valideringsbilderliste.txt", "w", encoding= "utf-8") as fil:
+    for valideringsbilde in valideringsbilder_liste:
+        navn = valideringsbilde["file_name"]
+        fil.write(navn + "\n") 
+
+with open("data/raw/bildelister/testbilderliste.txt", "w", encoding= "utf-8") as fil:
+    for testbilde in testbilder_liste:
+        navn = testbilde["file_name"]
+        fil.write(navn + "\n") 
+
+
+print("antall treningbilder er ", len(treningbilder_liste))
+print("antall valideringsbilder er ", len(valideringsbilder_liste))
+print("antall testbilder er ", len(testbilder_liste))
+
 print("antall kilde_ider er ", len(kilde_ider))
 print("antall trenings ider", len(trening_ider))
 print("antall validerings ider", len(validering_ider))
@@ -132,3 +156,4 @@ print("antall bilder av test sett er", len(fasit_test["images"]))
 print("antall bilder av trening sett er", len(fasit_trening["images"]))
 print("de 5 første elementene i id er ", kilde_liste[:5])
 print("de 5 siste elemente i id er ", kilde_liste[-5:])
+
