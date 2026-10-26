@@ -7,24 +7,15 @@ from pathlib import Path
 import random
 import shutil 
 
-
 with open("data/raw/HRSID_JPG/annotations/train_test2017.json", encoding = "utf-8") as fil:
-    fasit_validering = json.load(fil) #python ordboken laget fra JSON fasit filen, ikke selve filen
+    fasit_alle = json.load(fil) #python ordboken laget fra JSON fasit filen, ikke selve filen
 
-with open("data/raw/HRSID_JPG/annotations/train2017.json", encoding= "utf-8") as fil:
-    fasit_trening = json.load(fil) 
-
-with open("data/raw/HRSID_JPG/annotations/test2017.json", encoding= "utf-8") as fil:
-    fasit_testing = json.load(fil) 
-
-
-
-def konverter_bilde(filnavn, fasit):
+def konverter_bilde(filnavn, fasit_alle):
     info = []
-    for bilder in fasit["images"]:
+    for bilder in fasit_alle["images"]:
         if bilder["file_name"] == filnavn:
             bilde_id = bilder["id"]
-            for markering in fasit["annotations"]:
+            for markering in fasit_alle["annotations"]:
                 if markering["image_id"] == bilde_id:
                     x_kordinat_1 = markering["bbox"][0]
                     y_kordinat_1 = markering["bbox"][1]
@@ -83,28 +74,13 @@ def lagre_etiketter_testing(filnavn, info):
             linje = f"{båt['klasse']} {båt['midt_x']} {båt['midt_y']} {båt['boks_bredde']} {båt['boks_høyde']}\n"
             etikkettefil.write(linje)
 
-for bilde in fasit_validering["images"]:
-    filnavn = bilde["file_name"]
-    info = konverter_bilde(filnavn, fasit_validering)
-    lagre_etiketter_validering(filnavn, info)
-
-for bilde in fasit_trening["images"]:
-    filnavn = bilde["file_name"]
-    info = konverter_bilde(filnavn, fasit_trening)
-    lagre_etiketter_trening(filnavn, info)
-
-for bilde in fasit_testing["images"]:
-    filnavn = bilde["file_name"]
-    info = konverter_bilde(filnavn, fasit_testing)
-    lagre_etiketter_testing(filnavn, info)
-
 kilde_ider = set()
 kilde_liste = []
 treningbilder_liste = []
 valideringsbilder_liste = []
 testbilder_liste = []
 
-for bilde in fasit_validering["images"]:
+for bilde in fasit_alle["images"]:
     kilde_id = bilde["file_name"].split("_")[0]
     kilde_ider.add(kilde_id)
 
@@ -117,7 +93,7 @@ trening_ider = kilde_liste[:96]
 validering_ider = kilde_liste[96:116]
 test_ider = kilde_liste[116:]
 
-for bilde in fasit_["images"]:
+for bilde in fasit_alle["images"]:
     kilde_id = bilde["file_name"].split("_")[0]
     kilde_ider.add(kilde_id)
 
@@ -146,14 +122,21 @@ with open("data/raw/bildelister/testbilderliste.txt", "w", encoding= "utf-8") as
 for treningsbilde in treningbilder_liste:
     filnavn = treningsbilde["file_name"]
     shutil.copy2(f"data/raw/HRSID_JPG/JPEGImages/{filnavn}", f"data/processed/images/trening/{filnavn}")
+    info = konverter_bilde(filnavn, fasit_alle)
+    lagre_etiketter_trening(filnavn, info)
+
 
 for valideringsbilde in valideringsbilder_liste:
     filnavn = valideringsbilde["file_name"]
     shutil.copy2(f"data/raw/HRSID_JPG/JPEGImages/{filnavn}", f"data/processed/images/validering/{filnavn}")
+    info = konverter_bilde(filnavn, fasit_alle)
+    lagre_etiketter_validering(filnavn, info)
 
 for testbilde in testbilder_liste:
     filnavn = testbilde["file_name"]
     shutil.copy2(f"data/raw/HRSID_JPG/JPEGImages/{filnavn}", f"data/processed/images/testing/{filnavn}")
+    info = konverter_bilde(filnavn, fasit_alle)
+    lagre_etiketter_testing(filnavn, info)
 
 
 print("antall treningbilder er ", len(treningbilder_liste))
@@ -164,9 +147,22 @@ print("antall kilde_ider er ", len(kilde_ider))
 print("antall trenings ider", len(trening_ider))
 print("antall validerings ider", len(validering_ider))
 print("antall test ider", len(test_ider))
-print("antall bilder av test_trainer ", len(fasit["images"]))
-print("antall bilder av test sett er", len(fasit_test["images"]))
-print("antall bilder av trening sett er", len(fasit_trening["images"]))
+print("antall bilder av test_trainer ", len(fasit_alle["images"]))
 print("de 5 første elementene i id er ", kilde_liste[:5])
 print("de 5 siste elemente i id er ", kilde_liste[-5:])
 
+"""for bilde in fasit_validering["images"]:
+    filnavn = bilde["file_name"]
+    info = konverter_bilde(filnavn, fasit_validering)
+    lagre_etiketter_validering(filnavn, info)
+
+for bilde in fasit_trening["images"]:
+    filnavn = bilde["file_name"]
+    info = konverter_bilde(filnavn, fasit_trening)
+    lagre_etiketter_trening(filnavn, info)
+
+for bilde in fasit_testing["images"]:
+    filnavn = bilde["file_name"]
+    info = konverter_bilde(filnavn, fasit_testing)
+    lagre_etiketter_testing(filnavn, info)
+"""

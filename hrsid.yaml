@@ -1,0 +1,6 @@
+path: D:/koding/Svalbard prosjekter/Satellitt-og-Objekts-gjenkjennings-prosjekt-/data/processed
+train: images/trening
+val: images/validering
+test: images/testing
+names:
+  0: ship
