@@ -3,4 +3,4 @@ from ultralytics import YOLO #Ultralytics driver med computer vision og YOLO(you
 
 modell = YOLO("models/yolo26s.pt")
 
-modell.train(data="hrsid.yaml", epochs=20, imgsz = 800, batch = 2, device = 0, workers = 0)
+modell.train(data="hrsid.yaml", epochs=80, imgsz = 800, batch = 8, device = 0, workers = 0, patience = 10)
