@@ -9,6 +9,11 @@ from pathlib import Path
 from PIL import Image
 from torchvision.transforms.functional import to_tensor
 import torch.nn.functional as F
+from torchvision.transforms import v2
+
+batch_size = 4
+
+transform = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 class Net(nn.Module): #definerer type objekt, Net får egenskaper og støte fra nn.Module. Objekt er en konkret ting med egen data, handlinger tilknyttet seg, klassen er som en oppskrift for handlinger og håndtering
     def __init__(self):#_init_ er metoden som kjøres, self viser til dette modellobjektet, self betyr dette objektet inne i klassen
@@ -27,6 +32,7 @@ class Net(nn.Module): #definerer type objekt, Net får egenskaper og støte fra 
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
+        return x 
 
 
 
