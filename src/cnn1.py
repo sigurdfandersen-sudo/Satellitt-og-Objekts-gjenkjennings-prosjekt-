@@ -2,7 +2,7 @@ print("STARTER PROGRAM. HENT POPCORN")
 import torch
 import numpy as np
 import matplotlib as plt
-import torch.nn
+import torch.nn as nn
 from pathlib import Path
 from PIL import Image
 from torchvision.transforms.functional import to_tensor
@@ -21,3 +21,11 @@ print("Bilde størrelse er ", bilde.size)
 print("bilde modus er ", bilde.mode)
 print("bilde tensor er ", bilde_tensor)
 print("bilde tensor form er ", bilde_tensor.shape)
+
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv2d = nn.Conv2d
+
+modell = Net()
+        
