@@ -20,3 +20,6 @@ __pycache__/
 *.pth
 *.onnx
 *.zip
+
+# CIFAR-10 lastes ned lokalt
+/data/CIFAR/
