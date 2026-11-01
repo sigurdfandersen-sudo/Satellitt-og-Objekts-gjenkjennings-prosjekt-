@@ -1,6 +1,6 @@
+print("STARTER PROGRAM. HENT POPCORN")
 import torch.optim as optim
 import torchvision
-print("STARTER PROGRAM. HENT POPCORN")
 import torch
 import numpy as np
 import matplotlib as plt
@@ -13,7 +13,7 @@ from torchvision.transforms import v2
 import matplotlib.pyplot as plt
 
 
-
+epoch_max = 2
 batch_size = 4
 transform = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) #transform beskriver hva som skal skje med hvert bilde som hentes, compose setter sammen flere operasjoner i rekkefølge, ToImgae gjør slik at TorchVison kan arbeide med bilde som bildetensor, toDtype gjør at fargen går fra 0-1 og ikke 255, 
 
@@ -56,16 +56,51 @@ def ima_show(img):
     img = img.permute(1, 2, 0)
     return img
 
+criterion = nn.CrossEntropyLoss()
+optmizer = torch.optim.SGD(modell.parameters(), lr= 0.001, momentum=0.9)
+
+loss_avg_list = []
+batch_list = []
+batch_number = 0
+image_processed_number = 0
+for epoch in range(epoch_max):
+    running_loss = 0.0                        #brukes for gjennomsnittstap
+    for i, data in enumerate(trainloader, 0): #trainloader leverer en batch om gangen, 
+        inputs, labels = data
+        optmizer.zero_grad() #fjerner gamle lagrede gradienter, vekter er allerede justert
+        outputs = modell(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optmizer.step()
+        running_loss += loss.item()
+        batch_number += 1
+        image_processed_number += len(inputs)
+
+        if i % 2000 == 1999:
+            loss_avg_list.append(running_loss/2000)
+            batch_list.append(batch_number)
+
+            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+            running_loss = 0
+print("training is finished")
 
 
-for image, label in zip(images, labels):
+
+
+"""for bilde, etikett in zip(images, labels):
     image = ima_show(image)
+   
     print(f"bildets size er {image.size()}")
     plt.imshow(image)
     plt.title("første bilde")
     plt.xlabel(f"klassen er {classes[label]}")
     plt.show()
-
-
+"""
+plt.plot(batch_list, loss_avg_list)
+plt.title("Loss plotting")
+plt.xlabel("batch")
+plt.ylabel("loss")
+plt.grid(True)
+plt.show()
 
 
