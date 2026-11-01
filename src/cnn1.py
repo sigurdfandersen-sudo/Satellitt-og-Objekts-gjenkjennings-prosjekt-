@@ -21,10 +21,10 @@ bilde = Image.open(filsti)
 bilde.show(title="første bilde")
 
 bilde_tensor = to_tensor(bilde)
+bilde_batch = bilde_tensor[None, :] #legger til en ekstra dimensjon, skal behandles med liste av bilder i batch
 bilde_flat = torch.flatten(bilde_tensor)
 print("Bilde størrelse er ", bilde.size)
 print("bilde modus er ", bilde.mode)
-print("bilde tensor er ", bilde_tensor)
 print("bilde tensor form er ", bilde_tensor.shape)
 
 antall_treningsbilder = 0
@@ -43,7 +43,7 @@ class Net(nn.Module): #definerer type objekt, Net får egenskaper og støte fra 
         self.Conv1 = nn.Conv2d(3, 6, 5) #3 inngangskanaler (RGB), 6 filtre, 5 * 5 kernel size, med ulike filtervekter og en bias, mister piksler, siden vi har ingen kantutfylling
         self.pool = nn.MaxPool2d(2, 2) #ser på 2x2 verdier og beholder den største, så tar den 2 steg om gangen, bredde og høyde halvert, komprimerer resultat kartet
         self.Conv2 = nn.Conv2d(6, 16, 5) #tar inn 6 verdier fra 6 verdiene i forrige konvulusjonslag(resultatkart), lager 16 nye filtre mde 5x5 kernel størrelse, form(16, 10, 10)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc1 = nn.Linear(16 * 197 * 197, 120)  #p = 798, 399, 397, 397/2, f = 5, 16,   
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 10)
 
@@ -57,4 +57,6 @@ class Net(nn.Module): #definerer type objekt, Net får egenskaper og støte fra 
         return x
     
 modell = Net()
-        
+gjett = modell(bilde_batch)
+print(f"gjett shape er {gjett.shape}")
+print(f"gjett conv1 shape er {modell.Conv1(bilde_batch).shape}")
