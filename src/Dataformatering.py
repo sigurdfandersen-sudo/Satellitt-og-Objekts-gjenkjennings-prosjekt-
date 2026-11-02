@@ -5,7 +5,7 @@ import json #tekstformat for å lagre strukturerte data, HRSID bruker det for å
 from PIL import Image, ImageDraw
 from pathlib import Path
 import random
-import shutil 
+import shutil
 
 with open("data/raw/HRSID_JPG/annotations/train_test2017.json", encoding = "utf-8") as fil:
     fasit_alle = json.load(fil) #python ordboken laget fra JSON fasit filen, ikke selve filen
@@ -107,7 +107,7 @@ for bilde in fasit_alle["images"]:
 with open("data/raw/bildelister/treningsbilderliste.txt", "w", encoding= "utf-8") as fil:
     for treningsbilde in treningbilder_liste:
         navn = treningsbilde["file_name"]
-        fil.write(navn + "\n") 
+        fil.write(navn + "\n")
 
 with open("data/raw/bildelister/valideringsbilderliste.txt", "w", encoding= "utf-8") as fil:
     for valideringsbilde in valideringsbilder_liste:
